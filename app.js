@@ -9,7 +9,9 @@ app.get('/', function(req, res){
 app.get('/js/client_world.js', function(req, res){
     res.sendFile(__dirname + '/js/client_world.js');
 });
-
+app.get('/js/three.min.js', function(req, res){
+    res.sendFile(__dirname + '/js/three.min.js');
+});
 io.on('connection', function(socket){
     console.log('a user connected');
 
