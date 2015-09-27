@@ -1,11 +1,13 @@
-var container, scene, camera, renderer, raycaster, objects = [];
+var container, scene, camera, rendererMain, raycaster, objects = [];
 var keyState = {};
 var sphere;
 
 var player, playerId, moveSpeed, turnSpeed;
 
-var playerData;
+var planeMesh;
 
+var playerData;
+var cssScene,rendererCSS;
 var otherPlayers = [], otherPlayersId = [];
 
 var loadWorld = function(){
@@ -15,17 +17,36 @@ var loadWorld = function(){
 
     function init(){
 
+
         //Setup------------------------------------------
         container = document.getElementById('container');
 
         scene = new THREE.Scene();
 
-        camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+        cssScene = new THREE.Scene();
+
+
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
         camera.position.z = 5;
         //camera.lookAt( new THREE.Vector3(0,0,0));
 
-        renderer = new THREE.WebGLRenderer( { alpha: true} );
-        renderer.setSize( window.innerWidth, window.innerHeight);
+        rendererCSS	= new THREE.CSS3DRenderer();
+        rendererCSS.setSize( window.innerWidth, window.innerHeight );
+        rendererCSS.domElement.style.position	= 'absolute';
+        rendererCSS.domElement.style.top	= 0;
+        rendererCSS.domElement.style.margin	= 0;
+        rendererCSS.domElement.style.padding	= 0;
+        document.body.appendChild( rendererCSS.domElement );
+
+        rendererMain = new THREE.WebGLRenderer( { alpha: true} );
+        rendererMain.setSize( window.innerWidth, window.innerHeight );
+        rendererMain.domElement.style.position	= 'absolute';
+        rendererMain.domElement.style.top	= 0;
+        rendererMain.domElement.style.zIndex	= 1;
+        rendererCSS.domElement.appendChild( rendererMain.domElement );
+
+
+
 
         raycaster = new THREE.Raycaster();
         //Add Objects To the Scene HERE-------------------
@@ -55,8 +76,45 @@ var loadWorld = function(){
         window.addEventListener( 'resize', onWindowResize, false );
 
         //Final touches-----------------------------------
-        container.appendChild( renderer.domElement );
-        document.body.appendChild( container );
+
+         var tag = document.createElement('script');
+
+         tag.src = "https://www.youtube.com/iframe_api";
+         vplayer = document.createElement( 'iframe' );
+         var firstScriptTag = document.getElementsByTagName('script')[0];
+         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        //document.body.appendChild( container );
+
+
+        var material = new THREE.MeshBasicMaterial({color: 0x000000,side: THREE.DoubleSide});
+        material.color.set('black')
+        material.opacity   = 0;
+        material.blending  = THREE.NoBlending;
+        var geometry = new THREE.PlaneGeometry(1.33333333*5,5,30);
+        planeMesh= new THREE.Mesh( geometry, material );
+        planeMesh.position.y +=2.5;
+        // add it to the WebGL scene
+        scene.add(planeMesh);
+
+
+       	vplayer.style.width = '640px';
+        vplayer.style.height = '480px';
+       	vplayer.style.border = '0px';
+        vplayer.style.border = '0px';
+
+
+        var cssObject = new THREE.CSS3DObject( vplayer );
+        // we reference the same position and rotation
+        cssObject.position = planeMesh.position;
+        cssObject.position.y+=2.5;
+        cssObject.rotation = planeMesh.rotation;
+        cssObject.scale.x= .0105;
+        cssObject.scale.y=.0105;
+
+        // add it to the css scene
+        cssScene.add(cssObject);
+
     }
 
     function animate(){
@@ -72,10 +130,15 @@ var loadWorld = function(){
             checkKeyStates();
 
             camera.lookAt( player.position );
+            //camera.lookAt(planeMesh);
         }
+
         //Render Scene---------------------------------------
-        renderer.clear();
-        renderer.render( scene , camera );
+        rendererMain.clear();
+        rendererMain.render( scene , camera );
+        rendererCSS.render(cssScene,camera);
+
+
     }
 
     function onMouseClick(){
@@ -267,6 +330,62 @@ var removeOtherPlayer = function(data){
 
 };
 
+ function onYouTubeIframeAPIReady() {
+        vplayer = new YT.Player('player', {
+          height: '200',
+          width: '120',
+          videoId: 'HuNtddD8dzs',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+
+       /*	vplayer.style.width = '640px';
+        vplayer.style.height = '480px';
+       	vplayer.style.border = '0px';
+        vplayer.style.border = '0px';
+
+
+        var cssObject = new THREE.CSS3DObject( vplayer );
+        // we reference the same position and rotation
+        cssObject.position = planeMesh.position;
+        cssObject.position.y+=2.5;
+        cssObject.rotation = planeMesh.rotation;
+        cssObject.scale.x= .0105;
+        cssObject.scale.y=.0105;
+
+        // add it to the css scene
+        cssScene.add(cssObject);*/
+ }
+
+ function onPlayerReady(event) {
+         event.target.playVideo();
+         vplayer=document.getElementById('player');
+         vplayer.style.width = '640px';
+         vplayer.style.height = '480px';
+         vplayer.style.border = '0px';
+         vplayer.style.border = '0px';
+
+
+         var cssObject = new THREE.CSS3DObject( vplayer );
+         // we reference the same position and rotation
+         cssObject.position = planeMesh.position;
+         cssObject.position.y+=2.5;
+         cssObject.rotation = planeMesh.rotation;
+         cssObject.scale.x= .0105;
+         cssObject.scale.y=.0105;
+
+         // add it to the css scene
+         cssScene.add(cssObject);
+ }
+       function stopVideo() {
+         player.stopVideo();
+       }
+
+      function onPlayerStateChange(event) {
+
+      }
 var playerForId = function(id){
     var index;
     for (var i = 0; i < otherPlayersId.length; i++){

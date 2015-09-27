@@ -12,6 +12,12 @@ app.get('/js/client_world.js', function(req, res){
 app.get('/js/three.min.js', function(req, res){
     res.sendFile(__dirname + '/js/three.min.js');
 });
+app.get('/js/CSS3DRenderer.js', function(req, res){
+    res.sendFile(__dirname + '/js/CSS3DRenderer.js');
+})
+app.get('/assets/me.jpg', function(req, res){
+    res.sendFile(__dirname + '/assets/me.jpg');
+})
 io.on('connection', function(socket){
     console.log('a user connected');
 
