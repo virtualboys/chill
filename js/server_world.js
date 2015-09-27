@@ -13,7 +13,7 @@ function Player(){
     this.sizeY = 1;
     this.sizeZ = 1;
     this.speed = 0.2;
-    //this.keyState={};
+    this.keyState={};
     this.turnSpeed = 0.075;
 
 }
@@ -49,7 +49,7 @@ var updatePlayerData = function(data){
     player.r_x = data.r_x;
     player.r_y = data.r_y;
     player.r_z = data.r_z;
-    //player.keyState=data.keyState;
+    player.keyState=data.keyState;
 
     return player;
 };
