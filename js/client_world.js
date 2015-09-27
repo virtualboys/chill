@@ -1,5 +1,5 @@
 var container, scene, camera, rendererMain, raycaster, objects = [];
-var keyState = {};
+var myKeyState = {};
 var sphere;
 
 var player, playerId, moveSpeed, turnSpeed;
@@ -20,6 +20,9 @@ var loadWorld = function(){
 
         //Setup------------------------------------------
         container = document.getElementById('container');
+        var newName1 = document.createElement("TH");
+
+        newName1.innerHTML = "<input type='text'  name='site' id='site' value='cell value'>";
 
         scene = new THREE.Scene();
 
@@ -127,7 +130,13 @@ var loadWorld = function(){
 
             updateCameraPosition();
 
-            checkKeyStates();
+            checkKeyStates(myKeyState,player);
+            updatePlayerData();
+            socket.emit('updatePosition', playerData);
+            for(var i=0; i<otherPlayers.length; i++){
+                somePlayer=otherPlayers[i];
+                checkKeyStates(somePlayer.keyState,somePlayer);
+            }
 
             camera.lookAt( player.position );
             //camera.lookAt(planeMesh);
@@ -167,7 +176,7 @@ var loadWorld = function(){
 
         //event = event || window.event;
 
-        keyState[event.keyCode || event.which] = true;
+        myKeyState[event.keyCode || event.which] = true;
 
     }
 
@@ -175,7 +184,7 @@ var loadWorld = function(){
 
         //event = event || window.event;
 
-        keyState[event.keyCode || event.which] = false;
+        myKeyState[event.keyCode || event.which] = false;
 
     }
     function onWindowResize() {
@@ -247,6 +256,8 @@ var updatePlayerPosition = function(data){
     somePlayer.position.y = data.y;
     somePlayer.position.z = data.z;
 
+    somePlayer.keyState = data.keyState;
+
     somePlayer.rotation.x = data.r_x;
     somePlayer.rotation.y = data.r_y;
     somePlayer.rotation.z = data.r_z;
@@ -257,53 +268,44 @@ var updatePlayerData = function(){
     playerData.x = player.position.x;
     playerData.y = player.position.y;
     playerData.z = player.position.z;
+    playerData.keyState=myKeyState;
 
     playerData.r_x = player.rotation.x;
     playerData.r_y = player.rotation.y;
     playerData.r_z = player.rotation.z;
 
 };
-var checkKeyStates = function(){
+var checkKeyStates = function(keyState, somePlayer){
 
     if (keyState[38] || keyState[87]) {
         // up arrow or 'w' - move forward
-        player.position.x -= moveSpeed * Math.sin(player.rotation.y);
-        player.position.z -= moveSpeed * Math.cos(player.rotation.y);
-        updatePlayerData();
-        socket.emit('updatePosition', playerData);
+        somePlayer.position.x -= moveSpeed * Math.sin(somePlayer.rotation.y);
+        somePlayer.position.z -= moveSpeed * Math.cos(somePlayer.rotation.y);
+
     }
     if (keyState[40] || keyState[83]) {
         // down arrow or 's' - move backward
-        player.position.x += moveSpeed * Math.sin(player.rotation.y);
-        player.position.z += moveSpeed * Math.cos(player.rotation.y);
-        updatePlayerData();
-        socket.emit('updatePosition', playerData);
+        somePlayer.position.x += moveSpeed * Math.sin(somePlayer.rotation.y);
+        somePlayer.position.z += moveSpeed * Math.cos(somePlayer.rotation.y);
+
     }
     if (keyState[37] || keyState[65]) {
         // left arrow or 'a' - rotate left
-        player.rotation.y += turnSpeed;
-        updatePlayerData();
-        socket.emit('updatePosition', playerData);
+        somePlayer.rotation.y += turnSpeed;
     }
     if (keyState[39] || keyState[68]) {
         // right arrow or 'd' - rotate right
-        player.rotation.y -= turnSpeed;
-        updatePlayerData();
-        socket.emit('updatePosition', playerData);
+        somePlayer.rotation.y -= turnSpeed;
     }
     if (keyState[81]) {
         // 'q' - strafe left
-        player.position.x -= moveSpeed * Math.cos(player.rotation.y);
-        player.position.z += moveSpeed * Math.sin(player.rotation.y);
-        updatePlayerData();
-        socket.emit('updatePosition', playerData);
+        somePlayer.position.x -= moveSpeed * Math.cos(somePlayer.rotation.y);
+        somePlayer.position.z += moveSpeed * Math.sin(somePlayer.rotation.y);
     }
     if (keyState[69]) {
         // 'e' - strage right
-        player.position.x += moveSpeed * Math.cos(player.rotation.y);
-        player.position.z -= moveSpeed * Math.sin(player.rotation.y);
-        updatePlayerData();
-        socket.emit('updatePosition', playerData);
+        somePlayer.position.x += moveSpeed * Math.cos(somePlayer.rotation.y);
+        somePlayer.position.z -= moveSpeed * Math.sin(somePlayer.rotation.y);
     }
 
 };
@@ -316,6 +318,7 @@ var addOtherPlayer = function(data){
     otherPlayer.position.x = data.x;
     otherPlayer.position.y = data.y;
     otherPlayer.position.z = data.z;
+    otherPlayer.keyState={};
 
     otherPlayersId.push( data.playerId );
     otherPlayers.push( otherPlayer );
@@ -334,7 +337,7 @@ var removeOtherPlayer = function(data){
         vplayer = new YT.Player('player', {
           height: '200',
           width: '120',
-          videoId: 'HuNtddD8dzs',
+          videoId: '9iahS41FBWc',
           events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange

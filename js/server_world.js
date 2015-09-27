@@ -12,10 +12,12 @@ function Player(){
     this.sizeX = 1;
     this.sizeY = 1;
     this.sizeZ = 1;
-    this.speed = 0.1;
-    this.turnSpeed = 0.03;
+    this.speed = 0.2;
+    this.keyState={};
+    this.turnSpeed = 0.075;
 
 }
+
 
 var addPlayer = function(id){
 
@@ -43,6 +45,7 @@ var updatePlayerData = function(data){
     player.r_x = data.r_x;
     player.r_y = data.r_y;
     player.r_z = data.r_z;
+    player.keyState=data.keyState;
 
     return player;
 };
