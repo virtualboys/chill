@@ -337,7 +337,7 @@ var removeOtherPlayer = function(data){
         vplayer = new YT.Player('player', {
           height: '200',
           width: '120',
-          videoId: '9iahS41FBWc',
+          videoId: 'JsgU4t8EAEU',
           events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange
