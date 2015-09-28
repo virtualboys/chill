@@ -135,7 +135,7 @@ var loadWorld = function(){
             socket.emit('updatePosition', playerData);
             for(var i=0; i<otherPlayers.length; i++){
                 somePlayer=otherPlayers[i];
-                checkKeyStates(somePlayer.keyState,somePlayer);
+                //checkKeyStates(somePlayer.keyState,somePlayer);
             }
 
             camera.lookAt( player.position );

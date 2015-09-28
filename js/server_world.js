@@ -1,5 +1,7 @@
 var players = [];
 
+
+
 function Player(){
 
     this.playerId = players.length;
@@ -39,9 +41,6 @@ var removePlayer = function(player){
 
 var updatePlayerData = function(data){
     var player = playerForId(data.playerId);
-    if(player.x-data.x!==0){
-    console.log("change change"+data.playerId);
- }
 
     player.x = data.x;
     player.y = data.y;
