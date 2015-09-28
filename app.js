@@ -21,7 +21,9 @@ app.get('/assets/me.jpg', function(req, res){
 io.on('connection', function(socket){
     console.log('a user connected');
 
-    var id = socket.id;
+    //var id = socket.id;
+    var id =Math.random()*10000;
+    id= Math.floor(id );
     world.addPlayer(id);
 
     var player = world.playerForId(id);
