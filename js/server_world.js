@@ -25,6 +25,7 @@ var addPlayer = function(id){
 
     var player = new Player();
     player.playerId = id;
+
     players.push( player );
 
     return player;

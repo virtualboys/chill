@@ -265,6 +265,7 @@ var updatePlayerPosition = function(data){
 };
 
 var updatePlayerData = function(){
+
     playerData.x = player.position.x;
     playerData.y = player.position.y;
     playerData.z = player.position.z;
