@@ -38,6 +38,9 @@
         socket.emit('requestOldPlayers', {});
         animate();
     });
+    socket.on('doesthiswork', function() {
+        console.log("yes his works");
+    });
     socket.on('addOtherPlayer', function(data){
         console.log("Add other player w id: " + data.playerId);
 
@@ -47,6 +50,10 @@
         console.log("Remove other player w id: " + data.playerId);
 
         removeOtherPlayer(data);
+    });
+
+    $(window).on('beforeunload', function(){
+        socket.close();
     });
 
 </script>
