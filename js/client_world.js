@@ -13,7 +13,6 @@ var otherPlayers = [], otherPlayersId = [];
 var loadWorld = function(){
 
     init();
-    animate();
 
     function init(){
 
@@ -120,36 +119,6 @@ var loadWorld = function(){
 
     }
 
-    function animate(){
-        requestAnimationFrame( animate );
-        render();
-    }
-    function render(){
-
-        if ( player ){
-
-            updateCameraPosition();
-
-            checkKeyStates(myKeyState,player);
-            updatePlayerData();
-            socket.emit('updatePosition', playerData);
-            for(var i=0; i<otherPlayers.length; i++){
-                somePlayer=otherPlayers[i];
-                //checkKeyStates(somePlayer.keyState,somePlayer);
-            }
-
-            camera.lookAt( player.position );
-            //camera.lookAt(planeMesh);
-        }
-
-        //Render Scene---------------------------------------
-        rendererMain.clear();
-        rendererMain.render( scene , camera );
-        rendererCSS.render(cssScene,camera);
-
-
-    }
-
     function onMouseClick(){
         intersects = calculateIntersects( event );
 
@@ -192,7 +161,7 @@ var loadWorld = function(){
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
 
-        renderer.setSize( window.innerWidth, window.innerHeight );
+        rendererMain.setSize( window.innerWidth, window.innerHeight );
 
     }
     function calculateIntersects( event ){
@@ -239,6 +208,33 @@ var createPlayer = function(data){
 
     camera.lookAt( player.position );
 };
+
+var animate = function(){
+    requestAnimationFrame( animate );
+    render();
+}
+
+var render = function(){
+    if ( player ) {
+        updateCameraPosition();
+
+        checkKeyStates(myKeyState,player);
+        updatePlayerData();
+        socket.emit('updatePosition', playerData);
+        for(var i=0; i<otherPlayers.length; i++){
+            somePlayer=otherPlayers[i];
+            //checkKeyStates(somePlayer.keyState,somePlayer);
+        }
+
+        camera.lookAt( player.position );
+        //camera.lookAt(planeMesh);
+    }
+
+    //Render Scene---------------------------------------
+    rendererMain.clear();
+    rendererMain.render( scene , camera );
+    rendererCSS.render(cssScene,camera);
+}
 
 var updateCameraPosition = function(){
 

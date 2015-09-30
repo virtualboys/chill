@@ -27,16 +27,24 @@
         updatePlayerPosition(data);
     });
     socket.on('connect', function(){
-        loadWorld();
-        socket.emit('requestOldPlayers', {});
+        console.log("Connected")
     });
     socket.on('createPlayer', function(data){
+        console.log("Create player");
+
+        loadWorld();
         createPlayer(data);
+        socket.emit('requestOldPlayers', {});
+        animate();
     });
     socket.on('addOtherPlayer', function(data){
+        console.log("Add other player w id: " + data.playerId);
+
         addOtherPlayer(data);
     });
     socket.on('removeOtherPlayer', function(data){
+        console.log("Remove other player w id: " + data.playerId);
+        
         removeOtherPlayer(data);
     });
 

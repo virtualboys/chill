@@ -28,17 +28,26 @@ io.on('connection', function(socket){
 
     var player = world.playerForId(id);
     socket.emit('createPlayer', player);
+    console.log("Player created: ");
+    console.log(player);
 
     socket.broadcast.emit('addOtherPlayer', player);
 
     socket.on('requestOldPlayers', function(){
+        console.log("request old players, numplayers: " + world.players.length);
         for (var i = 0; i < world.players.length; i++){
-            console.log(world.players);
             if (world.players[i].playerId != id)
                 socket.emit('addOtherPlayer', world.players[i]);
         }
     });
+
+    var updatedPosition = false;
     socket.on('updatePosition', function(data){
+        if(!updatedPosition) {
+            console.log("First update for player " + player.playerId);
+            updatedPosition = true;
+        }
+
         var newData = world.updatePlayerData(data);
         socket.broadcast.emit('updatePosition', newData);
     });
@@ -48,6 +57,10 @@ io.on('connection', function(socket){
         world.removePlayer( player );
     });
 
+});
+
+io.on('error', function(error) {
+    console.log("Error: " + error);
 });
 
 var port = process.env.PORT || 3000;
