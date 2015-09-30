@@ -25,7 +25,9 @@
 
     socket.on('updatePosition', function(data){
         //console.log("Update player ")
-        updatePlayerPosition(data);
+        if(playerForId(data.playerId)) {
+            updatePlayerPosition(data);
+        }
     });
     socket.on('connect', function(){
         console.log("Connected")
