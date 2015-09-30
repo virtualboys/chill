@@ -34,7 +34,7 @@ io.on('connection', function(socket){
     socket.broadcast.emit('addOtherPlayer', player);
 
     socket.on('requestOldPlayers', function(){
-        socket.emit('doesthiswork');
+        io.emit('doesthiswork');
         console.log("request old players, numplayers: " + world.players.length);
         for (var i = 0; i < world.players.length; i++){
             if (world.players[i].playerId != id) {
