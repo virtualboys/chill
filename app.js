@@ -52,7 +52,7 @@ io.on('connection', function(socket){
         }
 
         var newData = world.updatePlayerData(data);
-        socket.broadcast.emit('updatePosition', newData);
+        // socket.broadcast.emit('updatePosition', newData);
     });
     socket.on('disconnect', function(){
         console.log('user disconnected');
