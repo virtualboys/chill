@@ -36,8 +36,10 @@ io.on('connection', function(socket){
     socket.on('requestOldPlayers', function(){
         console.log("request old players, numplayers: " + world.players.length);
         for (var i = 0; i < world.players.length; i++){
-            if (world.players[i].playerId != id)
+            if (world.players[i].playerId != id) {
+                console.log("Sending player: " + world.players[i].playerId);
                 socket.emit('addOtherPlayer', world.players[i]);
+            }
         }
     });
 

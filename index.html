@@ -24,6 +24,7 @@
     var socket = io();
 
     socket.on('updatePosition', function(data){
+        //console.log("Update player ")
         updatePlayerPosition(data);
     });
     socket.on('connect', function(){
@@ -44,7 +45,7 @@
     });
     socket.on('removeOtherPlayer', function(data){
         console.log("Remove other player w id: " + data.playerId);
-        
+
         removeOtherPlayer(data);
     });
 
