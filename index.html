@@ -31,7 +31,7 @@
         console.log("Connected")
     });
     socket.on('createPlayer', function(data){
-        console.log("Create player");
+        console.log("Creating player: " + data.playerId);
 
         loadWorld();
         createPlayer(data);
