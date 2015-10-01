@@ -23,7 +23,15 @@
 
     var socket = io();
 
-    socket.on('updatePosition', function(data){
+    var username = GetCookie('username');
+    if(username) {
+        console.log(username);
+    } else {
+        console.log('nousername');
+        SetCookie('username', mannie);
+    }
+
+    socket.on('updatePosition', function(data) {
         //console.log("Update player ")
         if(playerForId(data.playerId)) {
             updatePlayerPosition(data);

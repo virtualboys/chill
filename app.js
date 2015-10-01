@@ -1,7 +1,13 @@
+var secret = 'virt-boys-killin-it'
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var cookieParser = require('cookie-parser');
+
 var world = require('./js/server_world');
+
+app.use(cookieParser(secret));
 
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
@@ -28,8 +34,7 @@ io.on('connection', function(socket){
 
     var player = world.playerForId(id);
     socket.emit('createPlayer', player);
-    console.log("Player created: ");
-    console.log(player);
+    console.log("Player created: " + id);
 
     socket.broadcast.emit('addOtherPlayer', player);
 
